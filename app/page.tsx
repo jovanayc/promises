@@ -1,3 +1,5 @@
+import SignupForm from "./components/signupform/signupform";
+
 export default function Home() {
   return (
     <main className="relative min-h-screen bg-black text-white overflow-hidden">
@@ -27,39 +29,17 @@ export default function Home() {
         {/* CTA card */}
         <div className="mt-10 w-full rounded-2xl border border-white/10 bg-white/5 px-6 py-8 backdrop-blur-md shadow-[0_0_80px_rgba(247,215,116,0.06)]">
           <p className="text-lg sm:text-xl font-medium">
-            Daily , faith-filled encouragement
+            For Daily Faith
           </p>
           <p className="mt-2 text-white/70">
-            Scripture, gospel lyrics, and personal memos—sent randomly to your work email to bring some peace.
+            Scripture, gospel lyrics, and personal memos sent randomly to your work email to bring encouragement into your worklife.
           </p>
 
-          {/* simple signup */}
-          <form className="mt-6 grid gap-3 sm:grid-cols-3">
-            <input
-              type="email"
-              placeholder="Work email"
-              className="rounded-xl bg-black/60 border border-white/15 px-4 py-3 text-sm outline-none focus:border-yellow-200/60"
-            />
-            <input
-              type="text"
-              placeholder="Timezone (e.g., EST)"
-              className="rounded-xl bg-black/60 border border-white/15 px-4 py-3 text-sm outline-none focus:border-yellow-200/60"
-            />
-            <input
-              type="text"
-              placeholder="Work hours (e.g., 9–5)"
-              className="rounded-xl bg-black/60 border border-white/15 px-4 py-3 text-sm outline-none focus:border-yellow-200/60"
-            />
-            <button
-              type="submit"
-              className="sm:col-span-3 mt-2 rounded-xl bg-white text-black py-3 text-sm font-semibold hover:bg-yellow-100 transition"
-            >
-              Get Daily Promises →
-            </button>
-          </form>
+          {/* import simple signup */}
+          <SignupForm />
 
           <p className="mt-4 text-xs text-white/50">
-            Free • Private • No ads
+            Free • No Ads • Just for you
           </p>
         </div>
 
