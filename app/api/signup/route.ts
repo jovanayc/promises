@@ -19,7 +19,7 @@ export async function POST(request: Request) {
 
     const { data: existingUser, error: lookupError } = await supabase
       .from("users")
-      .select("id")
+      .select("id,status")
       .ilike("email", email)
       .limit(1)
       .maybeSingle();
@@ -32,7 +32,7 @@ export async function POST(request: Request) {
       );
     }
 
-    if (existingUser) {
+    if (existingUser?.status === "active") {
       return Response.json(
         {
           error: "That email is already receiving Promises.",
@@ -42,15 +42,49 @@ export async function POST(request: Request) {
       );
     }
 
-    const { error: insertError } = await supabase.from("users").insert([{ email }]);
+    if (existingUser) {
+      const { error: reactivateError } = await supabase
+        .from("users")
+        .update({
+          status: "active",
+          paused_at: null,
+          unsubscribed_at: null,
+          unsubscribe_token: crypto.randomUUID(),
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", existingUser.id);
 
-    if (insertError) {
-      console.error("Signup insert failed:", insertError);
-      return Response.json(
-        { error: "We could not save your signup. Please try again." },
-        { status: 500 }
-      );
+      if (reactivateError) {
+        console.error("Signup reactivation failed:", reactivateError);
+        return Response.json(
+          { error: "We could not reactivate your signup. Please try again." },
+          { status: 500 }
+        );
+      }
+    } else {
+      const { error: insertError } = await supabase.from("users").insert([
+        {
+          email,
+          status: "active",
+          unsubscribe_token: crypto.randomUUID(),
+        },
+      ]);
+
+      if (insertError) {
+        console.error("Signup insert failed:", insertError);
+        return Response.json(
+          { error: "We could not save your signup. Please try again." },
+          { status: 500 }
+        );
+      }
     }
+
+    await supabase.from("events").insert([
+      {
+        event_name: "signup_completed",
+        metadata: { source: "landing_page" },
+      },
+    ]);
 
     return Response.json(
       {
