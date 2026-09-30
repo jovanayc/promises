@@ -28,14 +28,13 @@ export default function Home() {
 
         {/* CTA card */}
         <div className="mt-10 w-full rounded-2xl border border-white/10 bg-white/5 px-6 py-8 backdrop-blur-md shadow-[0_0_80px_rgba(247,215,116,0.06)]">
-          <p className="text-lg sm:text-xl font-medium">
-            For Daily Faith
-          </p>
+          <p className="text-lg sm:text-xl font-medium">For Daily Faith</p>
           <p className="mt-2 text-white/70">
-            Scripture, gospel lyrics, and personal memos sent randomly to your work email to bring encouragement into your worklife.
+            Scripture, gospel-inspired encouragement, and personal memos sent to
+            your work email once each workday at a random time between 9 AM and
+            4 PM CT.
           </p>
 
-          {/* import simple signup */}
           <SignupForm />
 
           <p className="mt-4 text-xs text-white/50">
@@ -51,11 +50,11 @@ export default function Home() {
           </div>
           <div className="rounded-xl border border-white/10 bg-white/5 p-4">
             <div className="text-lg mb-1">✨</div>
-            Choose encouragement
+            We choose the moment
           </div>
           <div className="rounded-xl border border-white/10 bg-white/5 p-4">
             <div className="text-lg mb-1">🕊️</div>
-            Receive Promises
+            Receive your Promise
           </div>
         </div>
 
