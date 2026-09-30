@@ -1,49 +1,16 @@
 import { getSupabaseAdmin } from "@/lib/supabaseServer";
 
-const WORK_HOURS_PATTERN = /^([01]\d|2[0-3]):[0-5]\d-([01]\d|2[0-3]):[0-5]\d$/;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-function isValidTimeZone(timeZone: string) {
-  try {
-    new Intl.DateTimeFormat("en-US", { timeZone }).format();
-    return true;
-  } catch {
-    return false;
-  }
-}
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
-    const timezone = typeof body.timezone === "string" ? body.timezone.trim() : "";
-    const workHours = typeof body.work_hours === "string" ? body.work_hours.trim() : "";
+    const email =
+      typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
 
     if (!EMAIL_PATTERN.test(email)) {
       return Response.json(
         { error: "Enter a valid work email address." },
-        { status: 400 }
-      );
-    }
-
-    if (!timezone || !isValidTimeZone(timezone)) {
-      return Response.json(
-        { error: "We could not detect a valid timezone. Please refresh and try again." },
-        { status: 400 }
-      );
-    }
-
-    if (!WORK_HOURS_PATTERN.test(workHours)) {
-      return Response.json(
-        { error: "Choose a valid start and end time." },
-        { status: 400 }
-      );
-    }
-
-    const [workStart, workEnd] = workHours.split("-");
-    if (workStart === workEnd) {
-      return Response.json(
-        { error: "Your workday start and end times need to be different." },
         { status: 400 }
       );
     }
@@ -75,13 +42,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const { error: insertError } = await supabase.from("users").insert([
-      {
-        email,
-        timezone,
-        work_hours: workHours,
-      },
-    ]);
+    const { error: insertError } = await supabase.from("users").insert([{ email }]);
 
     if (insertError) {
       console.error("Signup insert failed:", insertError);
