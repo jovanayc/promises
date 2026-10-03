@@ -1,7 +1,20 @@
 import { Resend } from "resend";
 import type { PromiseContent } from "@/lib/promises";
 
-export const resend = new Resend(process.env.RESEND_API_KEY);
+let resendClient: Resend | null = null;
+
+// Create the Resend client on first use rather than at import time, so the
+// build doesn't fail when RESEND_API_KEY isn't available during `next build`.
+export function getResend() {
+  if (!resendClient) {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) {
+      throw new Error("Missing RESEND_API_KEY.");
+    }
+    resendClient = new Resend(apiKey);
+  }
+  return resendClient;
+}
 
 export function getAppUrl() {
   return (
@@ -89,7 +102,7 @@ export async function schedulePromiseEmail({
   const feedbackUrl = `${appUrl}/feedback/${sendLogId}?token=${feedbackToken}`;
   const manageUrl = `${appUrl}/manage/${manageToken}`;
 
-  return resend.emails.send(
+  return getResend().emails.send(
     {
       from:
         process.env.PROMISES_FROM_EMAIL ||

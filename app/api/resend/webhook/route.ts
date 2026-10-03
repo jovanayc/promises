@@ -1,4 +1,4 @@
-import { resend } from "@/lib/email";
+import { getResend } from "@/lib/email";
 import { getSupabaseAdmin } from "@/lib/supabaseServer";
 
 type ResendEvent = {
@@ -20,7 +20,7 @@ export async function POST(request: Request) {
   try {
     const payload = await request.text();
 
-    const event = resend.webhooks.verify({
+    const event = getResend().webhooks.verify({
       payload,
       headers: {
         id: request.headers.get("svix-id") || "",
