@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - milestone-1-1-signup
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_test
+      SUPABASE_SERVICE_ROLE_KEY: test_service_role_key
+      RESEND_API_KEY: re_test
+      RESEND_WEBHOOK_SECRET: whsec_test
+      CRON_SECRET: test_cron_secret
+      METRICS_SECRET: test_metrics_secret
+      APP_URL: http://localhost:3000
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build
